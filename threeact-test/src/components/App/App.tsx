@@ -5,7 +5,7 @@ import { OrbitControls } from 'drei'
 
 function App() {
 	return (
-        <Canvas camera={{position: [0,15,30]}}>
+        <Canvas camera={{position: [25,18,15]}}>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             <Suspense fallback={null}>
