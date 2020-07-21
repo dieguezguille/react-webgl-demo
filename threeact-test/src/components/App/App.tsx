@@ -1,7 +1,6 @@
 import React from 'react';
-import './App.css';
 import { Canvas } from "react-three-fiber";
-import Box from './components/Box';
+import Box from '../Box';
 
 function App() {
 	return (
