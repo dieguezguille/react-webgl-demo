@@ -6,12 +6,12 @@ source: https://sketchfab.com/3d-models/viking-room-a49f1b8e4f5c4ecf9e1fe7d81915
 title: Viking room
 */
 
-import * as THREE from 'three'
+// import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useLoader } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-export default function Model(props) {
+export default function RoomModel(props) {
   const group = useRef()
   const { nodes, materials } = useLoader(GLTFLoader, '/scene.gltf')
   return (
