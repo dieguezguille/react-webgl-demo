@@ -42,5 +42,11 @@
   .ui{
     position: absolute;
     z-index: 500;
+    color: white !important;
+  }
+
+  .title{
+    padding: .5rem 1rem;
+    margin: 0;
   }
   
