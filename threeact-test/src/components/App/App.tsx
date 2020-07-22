@@ -1,11 +1,13 @@
-import React, { Suspense } from "react";
-import { Canvas } from "react-three-fiber";
+import React, { Suspense, useRef } from "react";
+import { Canvas, extend } from "react-three-fiber";
 import RoomModel from "../../models/viking-room/VikingRoom";
 import { OrbitControls, Html } from "drei";
 import Menu from "../Menu/Menu";
 import Marker from "../Marker/Marker";
-// import Stars from "../Stars/Stars";
-// import {useSpring} from "react-spring";
+import {useSpring} from "react-spring";
+import { Camera } from "three";
+
+extend({ OrbitControls });
 
 const Fallback = () => (
   <Html>
@@ -13,19 +15,22 @@ const Fallback = () => (
   </Html>
 );
 
-let isSphereActive = false;
+let isMarkerSelected = false;
 
 function onActiveStateChanged(active: boolean) {
-  isSphereActive = active;
-  console.log(isSphereActive);
+  isMarkerSelected = active;
+  console.log(isMarkerSelected);
 }
 
 function App() {
+
+  // reference to the camera
+  const cameraRef = useRef<Camera>();
+
   return (
     <div className="content">
       <Menu></Menu>
-      <Canvas camera={{ position: [25, 18, 15] }}>
-        <perspectiveCamera></perspectiveCamera>
+      <Canvas camera={{ position: [18,18, 18], rotation: [0,0,0], ref: cameraRef }}>
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
         <Suspense fallback={<Fallback />}>
@@ -49,8 +54,7 @@ function App() {
             onActiveStateChanged={onActiveStateChanged}
           />
         </Suspense>
-        {/* <Stars /> */}
-        <OrbitControls />
+        <OrbitControls/>
       </Canvas>
     </div>
   );

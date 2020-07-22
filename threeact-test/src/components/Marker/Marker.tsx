@@ -13,6 +13,7 @@ function Marker({
   id: number;
   onActiveStateChanged?: (active: boolean) => void;
 }) {
+  
   const [active, setActive] = useState(false);
 
   useEffect(() => {
