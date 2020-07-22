@@ -79,6 +79,7 @@ body {
   color: #310c5c;
   text-align: center;
   background: #ffffff;
+  cursor: pointer !important;
 }
 
 .text-overlay {
