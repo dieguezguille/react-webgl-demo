@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { HTML } from "drei";
 import Nav from "react-bootstrap/esm/Nav";
 
 function Sphere(props) {
+
+  const [active, setActive] = useState(false);
+  console.log(active);
+
   return (
     <mesh {...props}>
       <sphereGeometry attach="geometry" args={[0.5, 16, 16]} />
@@ -14,7 +18,7 @@ function Sphere(props) {
         metalness={0.1}
       />
       <HTML scaleFactor={100}>
-        <Nav.Link className="sphereText">{props.name}</Nav.Link>
+        <Nav.Link className="sphereText" onClick={e => setActive(!active)}>{props.name}</Nav.Link>
       </HTML>
     </mesh>
   );
