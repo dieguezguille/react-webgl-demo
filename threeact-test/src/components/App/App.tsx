@@ -11,42 +11,55 @@ extend({ OrbitControls });
 
 function App() {
 
-  const [markers, setMarkers] = useState<Array<any>>(
+  const [markers] = useState<Array<{position: [number, number, number], cameraPos: [number, number, number],  name: string}>>(
     [
       {
         position: [-12, 10, 2],
+        cameraPos: [0,10,2],
         name: "The Tales",
       },
       {
         position: [0, 10, -7],
+        cameraPos: [0,10,5.7],
         name: "The Weapons",
       }, {
         position: [0, 6, 2],
+        cameraPos: [7,8,10],
         name: "The Food",
       },
     ]
   );
 
   const [cameraPos, setCameraPos] = useState<[number, number, number]>([18, 18, 18]);
+  const [controlsTarget, setControlsTarget] = useState<[number, number, number]>([0,10,7]);
+
+  function onMarkerClicked (id: number) {
+    updateCamera(id);
+  }
+
+  function updateCamera(id: number){
+    let key = id-1;
+    setCameraPos(markers[key].cameraPos);
+    setControlsTarget(markers[key].position);
+  }
 
   return (
     <div className="content">
-      <Menu></Menu>
+      <Menu />
       <Canvas camera={{ position: cameraPos, rotation: [0, 0, 0] }}>
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
-        <Navigation cameraPosition={cameraPos} />
+        <Navigation cameraPosition={cameraPos}/>
         <Suspense fallback={<Fallback />}>
-
           <Room position={[0, 0, 0]} />
 
           {markers.map(function (marker) {
             let key = markers.indexOf(marker);
-            return <Marker position={marker.position} name={marker.name} key={key} id={key+1} />
+            return <Marker position={marker.position} name={marker.name} key={key} id={key + 1} onMarkerClicked={onMarkerClicked} />
           })}
 
         </Suspense>
-        <OrbitControls />
+        <OrbitControls target={controlsTarget}/>
       </Canvas>
     </div>
   );
