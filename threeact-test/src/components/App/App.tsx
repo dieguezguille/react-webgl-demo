@@ -30,8 +30,8 @@ function App() {
     ]
   );
 
-  const [cameraPos, setCameraPos] = useState<[number, number, number]>([9, 18, 9]);
-  const [controlsTarget, setControlsTarget] = useState<[number, number, number]>([0,10,7]);
+  const [cameraPos, setCameraPos] = useState<[number, number, number]>([18, 18, 18]);
+  const [controlsTarget, setControlsTarget] = useState<[number, number, number]>([0,0,0]);
 
   function onMarkerClicked (id: number) {
     updateCamera(id);
