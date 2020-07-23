@@ -11,7 +11,7 @@ import React, { useRef } from 'react'
 import { useLoader } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-export default function RoomModel(props) {
+export default function Room(props) {
   const group = useRef()
   const { nodes, materials } = useLoader(GLTFLoader, '/scene.gltf')
   return (
