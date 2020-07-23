@@ -8,6 +8,7 @@ function Navigation({
 
   const { camera } = useThree();
   camera.position.set(...cameraPosition);
+  camera.updateProjectionMatrix();
 
   return (null);
 }

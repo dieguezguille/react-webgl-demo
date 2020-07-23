@@ -1,14 +1,22 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
 
-function Menu() {
+function Menu({
+  markers,
+  onMarkerClicked,
+}: {
+  markers: Array<{position: [number, number, number], cameraPos: [number, number, number],  name: string}>; 
+  onMarkerClicked: (id: number) => void
+}) {
   return (
     <div className="ui">
       <h2 className="title">Viking Room</h2>
       <Nav defaultActiveKey="/home" className="flex-column">
-        <Nav.Link>The Tales</Nav.Link>
-        <Nav.Link>The Weapons</Nav.Link>
-        <Nav.Link>The Food</Nav.Link>
+        {markers.map((marker) => {
+            let key = markers.indexOf(marker);
+            let id = key+1;
+            return <Nav.Link onClick={() => onMarkerClicked(id)} key={key}>{marker.name}</Nav.Link> 
+        })}
       </Nav>
     </div>
   );
