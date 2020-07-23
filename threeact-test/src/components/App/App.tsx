@@ -1,11 +1,10 @@
-import React, { Suspense, useRef } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { Canvas, extend } from "react-three-fiber";
 import RoomModel from "../../models/viking-room/VikingRoom";
 import { OrbitControls, Html } from "drei";
 import Menu from "../Menu/Menu";
 import Marker from "../Marker/Marker";
-import {useSpring} from "react-spring";
-import { Camera } from "three";
+import Navigation from "../Navigation/Navigation";
 
 extend({ OrbitControls });
 
@@ -15,46 +14,39 @@ const Fallback = () => (
   </Html>
 );
 
-let isMarkerSelected = false;
-
-function onActiveStateChanged(active: boolean) {
-  isMarkerSelected = active;
-  console.log(isMarkerSelected);
-}
-
 function App() {
 
-  // reference to the camera
-  const cameraRef = useRef<Camera>();
+  const [cameraPos, setCameraPos] = useState<[number, number, number]>([18,18,18]);
 
   return (
     <div className="content">
       <Menu></Menu>
-      <Canvas camera={{ position: [18,18, 18], rotation: [0,0,0], ref: cameraRef }}>
+      <Canvas camera={{ position: cameraPos, rotation: [0, 0, 0] }}>
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
+        <Navigation cameraPosition={cameraPos}/>
         <Suspense fallback={<Fallback />}>
           <RoomModel position={[0, 0, 0]} />
           <Marker
             position={[-12, 10, 2]}
             name="The Tales"
             id={1}
-            onActiveStateChanged={onActiveStateChanged}
+            onActiveStateChanged={() => setCameraPos([1,1,1])}
           />
           <Marker
             position={[0, 10, -7]}
             name="The Weapons"
             id={2}
-            onActiveStateChanged={onActiveStateChanged}
+            onActiveStateChanged={() => setCameraPos([2,2,2])}
           />
           <Marker
             position={[0, 6, 2]}
             name="The Food"
             id={3}
-            onActiveStateChanged={onActiveStateChanged}
+            onActiveStateChanged={() => setCameraPos([3,3,3])}
           />
         </Suspense>
-        <OrbitControls/>
+        <OrbitControls />
       </Canvas>
     </div>
   );
