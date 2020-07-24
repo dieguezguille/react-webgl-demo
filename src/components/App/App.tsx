@@ -1,12 +1,11 @@
 import React, { Suspense, useState } from "react";
 import { Canvas, extend } from "react-three-fiber";
-import { OrbitControls } from "drei";
+import { OrbitControls, Stars } from "drei";
 import Menu from "../Menu/Menu";
 import Marker from "../Marker/Marker";
 import Navigation from "../Navigation/Navigation";
 import Fallback from "../Fallback/Fallback";
 import Room from "../Room/Room";
-import { useSpring, animated } from "react-spring/three";
 
 extend({ OrbitControls });
 
@@ -35,41 +34,50 @@ function App() {
     },
   ]);
 
-  const [initialCameraPos, setInitialCameraPos] = useState<[number, number, number]>([18, 18, 18,]);
-  const [initialControlsTarget, setInitialControlsTarget] = useState<[number, number, number]>([0, 0, 0]);
+  const initialCameraPos: [number, number, number] = [18, 18, 18];
+  const initialControlsTarget: [number, number, number] = [0, 0, 0];
 
-  const [cameraPos, setCameraPos] = useState<[number, number, number]>(initialCameraPos);
-  const [controlsTarget, setControlsTarget] = useState<[number, number, number]>(initialControlsTarget);
+  const [cameraValues, setCameraValues] = useState({
+    prevCameraPos: initialCameraPos,
+    prevControlsTarget: initialControlsTarget,
+    cameraPos: initialCameraPos,
+    controlsTarget: initialControlsTarget,
+  });
 
-  const [active, setActive] = useState(false);
-
-  const props = useSpring({
-    cameraPos: active ? cameraPos : initialCameraPos,
-    controlsTarget: active? controlsTarget : initialControlsTarget,
-  })
-
-  function onMarkerClicked(id: number) {
+  function onNavigationItemClicked(id: number) {
     updateCamera(id);
-    console.log(active);
-    setActive(!active);
   }
 
   function updateCamera(id: number) {
-    let key = id - 1;
-    setCameraPos(markers[key].cameraPos);
-    setControlsTarget(markers[key].position);
+    let index = (id - 1);
+    setCameraValues({
+      prevCameraPos: cameraValues.cameraPos,
+      prevControlsTarget: cameraValues.prevControlsTarget,
+      cameraPos: markers[index].cameraPos,
+      controlsTarget: markers[index].position,
+    });
+  }
+
+  function onTitleClicked(){
+    setCameraValues({
+      prevCameraPos: cameraValues.cameraPos,
+      prevControlsTarget: cameraValues.prevControlsTarget,
+      cameraPos: initialCameraPos,
+      controlsTarget: initialControlsTarget,
+    });
   }
 
   return (
     <div className="content">
-      <Menu markers={markers} onMarkerClicked={onMarkerClicked} />
-      <Canvas camera={{ position: cameraPos, rotation: [0, 0, 0] }}>
+      <Menu markers={markers} onMarkerClicked={onNavigationItemClicked} onTitleClicked={onTitleClicked}/>
+      <Canvas
+        camera={{ position: cameraValues.cameraPos, rotation: [0, 0, 0] }}
+      >
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
-        <Navigation cameraPosition={active ? cameraPos : initialCameraPos} />
+        <Navigation cameraPosition={cameraValues.cameraPos} />
         <Suspense fallback={<Fallback />}>
           <Room position={[0, 0, 0]} />
-
           {markers.map(function (marker) {
             let key = markers.indexOf(marker);
             return (
@@ -78,12 +86,20 @@ function App() {
                 name={marker.name}
                 key={key}
                 id={key + 1}
-                onMarkerClicked={onMarkerClicked}
+                onMarkerClicked={onNavigationItemClicked}
               />
             );
           })}
         </Suspense>
-        <OrbitControls target={active ? controlsTarget : initialControlsTarget} />
+        <OrbitControls target={cameraValues.controlsTarget} enableZoom={false} enableKeys={false} enablePan={false} />
+        <Stars
+          radius={100}
+          depth={100}
+          count={2000}
+          factor={6}
+          saturation={0}
+          fade={true}
+        />
       </Canvas>
     </div>
   );
