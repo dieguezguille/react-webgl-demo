@@ -6,7 +6,7 @@ import Marker from "../Marker/Marker";
 import Navigation from "../Navigation/Navigation";
 import Fallback from "../Fallback/Fallback";
 import Room from "../Room/Room";
-import { animated } from "react-spring/renderprops-universal";
+import {useSpring, animated, config} from "react-spring";
 
 function App() {
   const [markers] = useState<
@@ -36,14 +36,14 @@ function App() {
   const initialCameraPos: [number, number, number] = [18, 18, 18];
   const initialControlsTarget: [number, number, number] = [0, 0, 0];
 
-  // const AnimatedNavigation = animated(Navigation);
+  const AnimatedNavigation = animated(Navigation);
   const AnimatedOrbitControls = animated(OrbitControls);
 
   const [cameraValues, setCameraValues] = useState({
-    prevCameraPos: initialCameraPos,
-    prevControlsTarget: initialControlsTarget,
-    cameraPos: initialCameraPos,
-    controlsTarget: initialControlsTarget,
+    cachedPos: initialCameraPos,
+    cachedTarget: initialControlsTarget,
+    pos: initialCameraPos,
+    target: initialControlsTarget,
     autoRotate: true,
   });
 
@@ -54,23 +54,33 @@ function App() {
   function updateCamera(id: number) {
     let index = id - 1;
     setCameraValues({
-      prevCameraPos: cameraValues.cameraPos,
-      prevControlsTarget: cameraValues.prevControlsTarget,
-      cameraPos: markers[index].cameraPos,
-      controlsTarget: markers[index].position,
+      cachedPos: cameraValues.pos,
+      cachedTarget: cameraValues.cachedTarget,
+      pos: markers[index].cameraPos,
+      target: markers[index].position,
       autoRotate: false,
     });
   }
 
   function onTitleClicked() {
     setCameraValues({
-      prevCameraPos: cameraValues.cameraPos,
-      prevControlsTarget: cameraValues.prevControlsTarget,
-      cameraPos: initialCameraPos,
-      controlsTarget: initialControlsTarget,
+      cachedPos: cameraValues.pos,
+      cachedTarget: cameraValues.cachedTarget,
+      pos: initialCameraPos,
+      target: initialControlsTarget,
       autoRotate: true,
     });
   }
+
+  const spring = useSpring({
+    pos: cameraValues.pos,
+    target: cameraValues.target,
+    from: {
+      pos: cameraValues.cachedPos,
+      target: cameraValues.cachedTarget
+    },
+    config: config.slow
+  })
 
   return (
     <div className="content">
@@ -80,11 +90,11 @@ function App() {
         onTitleClicked={onTitleClicked}
       />
       <Canvas
-        camera={{ position: cameraValues.cameraPos, rotation: [0, 0, 0] }}
+        camera={{ position: cameraValues.pos, rotation: [0, 0, 0] }}
       >
         <ambientLight />
-        <pointLight position={[10, 10, 10]} />
-        <Navigation cameraPosition={cameraValues.cameraPos} />
+        <pointLight position={[0, 5, 0]} intensity={1} />
+        <AnimatedNavigation cameraPosition={spring.pos} />
         <Suspense fallback={<Fallback />}>
           <Room position={[0, 0, 0]} />
           {markers.map(function (marker) {
@@ -105,8 +115,7 @@ function App() {
           autoRotateSpeed={0.2}
           maxPolarAngle={Math.PI / 2.5}
           minPolarAngle={Math.PI / 3}
-          target={cameraValues.controlsTarget}
-          enableZoom={false}
+          target={spring.target}
           enableKeys={false}
           enablePan={false}
         />

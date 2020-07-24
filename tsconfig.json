@@ -18,9 +18,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "noImplicitAny": false,
+    "noImplicitAny": false
   },
   "include": [
-    "src", "public/models/viking-room/VikingRoom.js"
+    "src"
   ]
 }
