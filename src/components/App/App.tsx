@@ -42,6 +42,7 @@ function App() {
     prevControlsTarget: initialControlsTarget,
     cameraPos: initialCameraPos,
     controlsTarget: initialControlsTarget,
+    autoRotate: true,
   });
 
   function onNavigationItemClicked(id: number) {
@@ -55,6 +56,7 @@ function App() {
       prevControlsTarget: cameraValues.prevControlsTarget,
       cameraPos: markers[index].cameraPos,
       controlsTarget: markers[index].position,
+      autoRotate: false
     });
   }
 
@@ -64,6 +66,7 @@ function App() {
       prevControlsTarget: cameraValues.prevControlsTarget,
       cameraPos: initialCameraPos,
       controlsTarget: initialControlsTarget,
+      autoRotate: true
     });
   }
 
@@ -91,7 +94,7 @@ function App() {
             );
           })}
         </Suspense>
-        <OrbitControls target={cameraValues.controlsTarget} enableZoom={false} enableKeys={false} enablePan={false} />
+        <OrbitControls autoRotate={cameraValues.autoRotate} target={cameraValues.controlsTarget} enableZoom={false} enableKeys={false} enablePan={false} />
         <Stars
           radius={100}
           depth={100}
