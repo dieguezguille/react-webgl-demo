@@ -6,6 +6,7 @@ import Marker from "../Marker/Marker";
 import Navigation from "../Navigation/Navigation";
 import Fallback from "../Fallback/Fallback";
 import Room from "../Room/Room";
+import { animated } from "react-spring/renderprops-universal";
 
 function App() {
   const [markers] = useState<
@@ -34,6 +35,9 @@ function App() {
 
   const initialCameraPos: [number, number, number] = [18, 18, 18];
   const initialControlsTarget: [number, number, number] = [0, 0, 0];
+
+  // const AnimatedNavigation = animated(Navigation);
+  const AnimatedOrbitControls = animated(OrbitControls);
 
   const [cameraValues, setCameraValues] = useState({
     prevCameraPos: initialCameraPos,
@@ -71,7 +75,7 @@ function App() {
   return (
     <div className="content">
       <Menu
-        markers={markers}
+        items={markers}
         onMarkerClicked={onNavigationItemClicked}
         onTitleClicked={onTitleClicked}
       />
@@ -96,7 +100,7 @@ function App() {
             );
           })}
         </Suspense>
-        <OrbitControls
+        <AnimatedOrbitControls
           autoRotate={cameraValues.autoRotate}
           autoRotateSpeed={0.2}
           maxPolarAngle={Math.PI / 2.5}
