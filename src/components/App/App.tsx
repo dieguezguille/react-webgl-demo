@@ -1,13 +1,11 @@
 import React, { Suspense, useState } from "react";
-import { Canvas, extend } from "react-three-fiber";
+import { Canvas } from "react-three-fiber";
 import { OrbitControls, Stars } from "drei";
 import Menu from "../Menu/Menu";
 import Marker from "../Marker/Marker";
 import Navigation from "../Navigation/Navigation";
 import Fallback from "../Fallback/Fallback";
 import Room from "../Room/Room";
-
-extend({ OrbitControls });
 
 function App() {
   const [markers] = useState<
@@ -50,29 +48,33 @@ function App() {
   }
 
   function updateCamera(id: number) {
-    let index = (id - 1);
+    let index = id - 1;
     setCameraValues({
       prevCameraPos: cameraValues.cameraPos,
       prevControlsTarget: cameraValues.prevControlsTarget,
       cameraPos: markers[index].cameraPos,
       controlsTarget: markers[index].position,
-      autoRotate: false
+      autoRotate: false,
     });
   }
 
-  function onTitleClicked(){
+  function onTitleClicked() {
     setCameraValues({
       prevCameraPos: cameraValues.cameraPos,
       prevControlsTarget: cameraValues.prevControlsTarget,
       cameraPos: initialCameraPos,
       controlsTarget: initialControlsTarget,
-      autoRotate: true
+      autoRotate: true,
     });
   }
 
   return (
     <div className="content">
-      <Menu markers={markers} onMarkerClicked={onNavigationItemClicked} onTitleClicked={onTitleClicked}/>
+      <Menu
+        markers={markers}
+        onMarkerClicked={onNavigationItemClicked}
+        onTitleClicked={onTitleClicked}
+      />
       <Canvas
         camera={{ position: cameraValues.cameraPos, rotation: [0, 0, 0] }}
       >
@@ -94,7 +96,16 @@ function App() {
             );
           })}
         </Suspense>
-        <OrbitControls autoRotate={cameraValues.autoRotate} target={cameraValues.controlsTarget} enableZoom={false} enableKeys={false} enablePan={false} />
+        <OrbitControls
+          autoRotate={cameraValues.autoRotate}
+          autoRotateSpeed={0.2}
+          maxPolarAngle={Math.PI / 2.5}
+          minPolarAngle={Math.PI / 3}
+          target={cameraValues.controlsTarget}
+          enableZoom={false}
+          enableKeys={false}
+          enablePan={false}
+        />
         <Stars
           radius={100}
           depth={100}
