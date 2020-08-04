@@ -62,7 +62,7 @@ function App() {
         cachedTarget: cameraValues.cachedTarget,
         pos: markers[selectedItemIndex].cameraPos,
         target: markers[selectedItemIndex].position,
-        autoRotate: false,
+        autoRotate: id === 0,
       });
     }
   }
