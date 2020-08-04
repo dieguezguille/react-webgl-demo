@@ -1,12 +1,12 @@
 import React, { Suspense, useState } from "react";
 import { Canvas } from "react-three-fiber";
 import { OrbitControls, Stars } from "drei";
-import Menu from "../Menu/Menu";
 import Marker from "../Marker/Marker";
 import Navigation from "../Navigation/Navigation";
 import Fallback from "../Fallback/Fallback";
 import Room from "../Room/Room";
-import {useSpring, animated, config} from "react-spring";
+import { useSpring, animated, config } from "react-spring";
+import Nav from "react-bootstrap/esm/Nav";
 
 let selectedItemIndex: number;
 
@@ -18,6 +18,11 @@ function App() {
       name: string;
     }>
   >([
+    {
+      position: [0, 0, 0],
+      cameraPos: [18, 18, 18],
+      name: "Title"
+    },
     {
       position: [-12, 10, 2],
       cameraPos: [0, 10, 2],
@@ -50,30 +55,14 @@ function App() {
   });
 
   function onNavigationItemClicked(id: number) {
-    updateCamera(id);
-  }
-
-  function updateCamera(id: number) {
-    if (selectedItemIndex !== (id - 1)){
-      selectedItemIndex = id - 1;
+    if (selectedItemIndex !== id) {
+      selectedItemIndex = id;
       setCameraValues({
         cachedPos: cameraValues.pos,
         cachedTarget: cameraValues.cachedTarget,
         pos: markers[selectedItemIndex].cameraPos,
         target: markers[selectedItemIndex].position,
         autoRotate: false,
-      });
-    }
-  }
-
-  function onTitleClicked() {
-    if (cameraValues.target !== initialControlsTarget){ // do what you gotta do
-      setCameraValues({
-        cachedPos: cameraValues.pos,
-        cachedTarget: cameraValues.cachedTarget,
-        pos: initialCameraPos,
-        target: initialControlsTarget,
-        autoRotate: true,
       });
     }
   }
@@ -90,31 +79,48 @@ function App() {
 
   return (
     <div className="content">
-      <Menu
-        items={markers}
-        onMarkerClicked={onNavigationItemClicked}
-        onTitleClicked={onTitleClicked}
-      />
+      <div className="ui">
+        <h2 className="title"
+            onClick={() => onNavigationItemClicked(0)}>
+          The Viking Room
+      </h2>
+        <Nav defaultActiveKey="/home" className="flex-column">
+          <Nav.Link
+            onClick={() => onNavigationItemClicked(1)}>
+            {markers[1].name}
+          </Nav.Link>
+          <Nav.Link
+            onClick={() => onNavigationItemClicked(2)}>
+            {markers[2].name}
+          </Nav.Link>
+          <Nav.Link
+            onClick={() => onNavigationItemClicked(3)}>
+            {markers[3].name}
+          </Nav.Link>
+        </Nav>
+      </div>
       <Canvas
-        camera={{ position: cameraValues.pos, rotation: [0, 0, 0] }}
-      >
+        camera={{ position: cameraValues.pos, rotation: [0, 0, 0] }}>
         <ambientLight />
         <pointLight position={[0, 5, 0]} intensity={1} />
         <AnimatedNavigation cameraPosition={spring.pos} />
         <Suspense fallback={<Fallback />}>
           <Room position={[0, 0, 0]} />
-          {markers.map(function (marker) {
-            let key = markers.indexOf(marker);
-            return (
-              <Marker
-                position={marker.position}
-                name={marker.name}
-                key={key}
-                id={key + 1}
-                onMarkerClicked={onNavigationItemClicked}
-              />
-            );
-          })}
+          <Marker
+            position={markers[1].position}
+            name={markers[1].name}
+            id={1}
+            onMarkerClicked={onNavigationItemClicked} />
+          <Marker
+            position={markers[2].position}
+            name={markers[2].name}
+            id={2}
+            onMarkerClicked={onNavigationItemClicked} />
+          <Marker
+            position={markers[3].position}
+            name={markers[3].name}
+            id={3}
+            onMarkerClicked={onNavigationItemClicked} />
         </Suspense>
         <AnimatedOrbitControls
           autoRotate={cameraValues.autoRotate}
@@ -123,16 +129,14 @@ function App() {
           minPolarAngle={Math.PI / 3}
           target={spring.target}
           enableKeys={false}
-          enablePan={false}
-        />
+          enablePan={false} />
         <Stars
           radius={100}
           depth={100}
           count={2000}
           factor={6}
           saturation={0}
-          fade={true}
-        />
+          fade={true} />
       </Canvas>
     </div>
   );
