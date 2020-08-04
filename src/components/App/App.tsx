@@ -42,6 +42,7 @@ function App() {
 
   const initialCameraPos: [number, number, number] = [18, 18, 18];
   const initialControlsTarget: [number, number, number] = [0, 0, 0];
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const AnimatedNavigation = animated(Navigation);
   const AnimatedOrbitControls = animated(OrbitControls);
@@ -57,6 +58,7 @@ function App() {
   function onNavigationItemClicked(id: number) {
     if (selectedItemIndex !== id) {
       selectedItemIndex = id;
+      setIsAnimating(true);
       setCameraValues({
         cachedPos: cameraValues.pos,
         cachedTarget: cameraValues.cachedTarget,
@@ -74,14 +76,15 @@ function App() {
       pos: cameraValues.cachedPos,
       target: cameraValues.cachedTarget
     },
-    config: config.slow
-  })
+    config: config.slow,
+    onRest: () => setIsAnimating(false),
+    })
 
   return (
     <div className="content">
       <div className="ui">
         <h2 className="title"
-            onClick={() => onNavigationItemClicked(0)}>
+          onClick={() => onNavigationItemClicked(0)}>
           The Viking Room
       </h2>
         <Nav defaultActiveKey="/home" className="flex-column">
@@ -105,22 +108,30 @@ function App() {
         <pointLight position={[0, 5, 0]} intensity={1} />
         <AnimatedNavigation cameraPosition={spring.pos} />
         <Suspense fallback={<Fallback />}>
+          
           <Room position={[0, 0, 0]} />
-          <Marker
-            position={markers[1].position}
-            name={markers[1].name}
-            id={1}
-            onMarkerClicked={onNavigationItemClicked} />
-          <Marker
+          
+          {isAnimating ? null :
+            <Marker
+              position={markers[1].position}
+              name={markers[1].name}
+              id={1}
+              onMarkerClicked={onNavigationItemClicked} />
+          }
+
+          {isAnimating ? null : <Marker
             position={markers[2].position}
             name={markers[2].name}
             id={2}
-            onMarkerClicked={onNavigationItemClicked} />
-          <Marker
+            onMarkerClicked={onNavigationItemClicked} />}
+
+          {isAnimating ? null : <Marker
             position={markers[3].position}
             name={markers[3].name}
             id={3}
             onMarkerClicked={onNavigationItemClicked} />
+          }
+
         </Suspense>
         <AnimatedOrbitControls
           autoRotate={cameraValues.autoRotate}
