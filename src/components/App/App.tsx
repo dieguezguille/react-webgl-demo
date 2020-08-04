@@ -8,6 +8,8 @@ import Fallback from "../Fallback/Fallback";
 import Room from "../Room/Room";
 import {useSpring, animated, config} from "react-spring";
 
+let selectedItemIndex: number;
+
 function App() {
   const [markers] = useState<
     Array<{
@@ -52,24 +54,28 @@ function App() {
   }
 
   function updateCamera(id: number) {
-    let index = id - 1;
-    setCameraValues({
-      cachedPos: cameraValues.pos,
-      cachedTarget: cameraValues.cachedTarget,
-      pos: markers[index].cameraPos,
-      target: markers[index].position,
-      autoRotate: false,
-    });
+    if (selectedItemIndex !== (id - 1)){
+      selectedItemIndex = id - 1;
+      setCameraValues({
+        cachedPos: cameraValues.pos,
+        cachedTarget: cameraValues.cachedTarget,
+        pos: markers[selectedItemIndex].cameraPos,
+        target: markers[selectedItemIndex].position,
+        autoRotate: false,
+      });
+    }
   }
 
   function onTitleClicked() {
-    setCameraValues({
-      cachedPos: cameraValues.pos,
-      cachedTarget: cameraValues.cachedTarget,
-      pos: initialCameraPos,
-      target: initialControlsTarget,
-      autoRotate: true,
-    });
+    if (cameraValues.target !== initialControlsTarget){ // do what you gotta do
+      setCameraValues({
+        cachedPos: cameraValues.pos,
+        cachedTarget: cameraValues.cachedTarget,
+        pos: initialCameraPos,
+        target: initialControlsTarget,
+        autoRotate: true,
+      });
+    }
   }
 
   const spring = useSpring({
