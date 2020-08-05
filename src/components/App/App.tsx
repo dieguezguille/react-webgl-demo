@@ -78,7 +78,7 @@ function App() {
     },
     config: config.slow,
     onRest: () => setIsAnimating(false),
-    })
+  })
 
   return (
     <div className="content">
@@ -106,32 +106,26 @@ function App() {
         camera={{ position: cameraValues.pos, rotation: [0, 0, 0] }}>
         <ambientLight />
         <pointLight position={[0, 5, 0]} intensity={1} />
-        <AnimatedNavigation cameraPosition={spring.pos} />
+        <AnimatedNavigation cameraPosition={spring.pos}/>
         <Suspense fallback={<Fallback />}>
-          
           <Room position={[0, 0, 0]} />
-          
-          {isAnimating ? null :
+          {isAnimating ? null : <group>
             <Marker
               position={markers[1].position}
               name={markers[1].name}
               id={1}
               onMarkerClicked={onNavigationItemClicked} />
-          }
-
-          {isAnimating ? null : <Marker
-            position={markers[2].position}
-            name={markers[2].name}
-            id={2}
-            onMarkerClicked={onNavigationItemClicked} />}
-
-          {isAnimating ? null : <Marker
-            position={markers[3].position}
-            name={markers[3].name}
-            id={3}
-            onMarkerClicked={onNavigationItemClicked} />
-          }
-
+            <Marker
+              position={markers[2].position}
+              name={markers[2].name}
+              id={2}
+              onMarkerClicked={onNavigationItemClicked} />
+            <Marker
+              position={markers[3].position}
+              name={markers[3].name}
+              id={3}
+              onMarkerClicked={onNavigationItemClicked} />
+          </group>}
         </Suspense>
         <AnimatedOrbitControls
           autoRotate={cameraValues.autoRotate}
@@ -140,7 +134,8 @@ function App() {
           minPolarAngle={Math.PI / 3}
           target={spring.target}
           enableKeys={false}
-          enablePan={false} />
+          enablePan={false}
+          onUpdate={self => console.log('props have been updated')}/>
         <Stars
           radius={100}
           depth={100}
