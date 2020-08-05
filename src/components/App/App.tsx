@@ -9,6 +9,8 @@ import { useSpring, animated, config } from "react-spring";
 import Nav from "react-bootstrap/esm/Nav";
 
 let selectedItemIndex: number;
+const initialCameraPos: [number, number, number] = [18, 18, 18];
+const initialControlsTarget: [number, number, number] = [0, 0, 0];
 
 function App() {
   const [markers] = useState<
@@ -39,9 +41,7 @@ function App() {
       name: "The Food",
     },
   ]);
-
-  const initialCameraPos: [number, number, number] = [18, 18, 18];
-  const initialControlsTarget: [number, number, number] = [0, 0, 0];
+  
   const [isAnimating, setIsAnimating] = useState(false);
 
   const AnimatedNavigation = animated(Navigation);
@@ -56,7 +56,7 @@ function App() {
   });
 
   function onNavigationItemClicked(id: number) {
-    if (selectedItemIndex !== id) {
+    if (selectedItemIndex !== id && !isAnimating) {
       selectedItemIndex = id;
       setIsAnimating(true);
       setCameraValues({
@@ -79,6 +79,24 @@ function App() {
     config: config.slow,
     onRest: () => setIsAnimating(false),
   })
+
+  // const spring = useSpring({
+  //   to: async (next, cancel) => {
+  //     if (!isAnimating) {
+  //       cancel()
+  //     }
+  //     await next({
+  //       pos: cameraValues.pos,
+  //       target: cameraValues.target,
+  //     })
+  //   },
+  //   from: {
+  //     pos: cameraValues.cachedPos,
+  //     target: cameraValues.cachedTarget
+  //   },
+  //   config: config.slow,
+  //   onRest: () => setIsAnimating(false),
+  // })
 
   return (
     <div className="content">
@@ -106,7 +124,7 @@ function App() {
         camera={{ position: cameraValues.pos, rotation: [0, 0, 0] }}>
         <ambientLight />
         <pointLight position={[0, 5, 0]} intensity={1} />
-        <AnimatedNavigation cameraPosition={spring.pos}/>
+        <AnimatedNavigation cameraPosition={spring.pos} />
         <Suspense fallback={<Fallback />}>
           <Room position={[0, 0, 0]} />
           {isAnimating ? null : <group>
@@ -134,8 +152,7 @@ function App() {
           minPolarAngle={Math.PI / 3}
           target={spring.target}
           enableKeys={false}
-          enablePan={false}
-          onUpdate={self => console.log('props have been updated')}/>
+          enablePan={false}/>
         <Stars
           radius={100}
           depth={100}
