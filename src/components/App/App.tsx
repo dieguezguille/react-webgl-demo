@@ -1,16 +1,20 @@
 import React, { Suspense, useState } from "react";
-import { Canvas } from "react-three-fiber";
-import { OrbitControls, Stars } from "drei";
+import { Canvas, extend } from "react-three-fiber";
+import { Stars } from "drei";
 import Marker from "../Marker/Marker";
 import Navigation from "../Navigation/Navigation";
 import Fallback from "../Fallback/Fallback";
 import Room from "../Room/Room";
 import { useSpring, animated, config } from "react-spring";
 import Nav from "react-bootstrap/esm/Nav";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import Controls from "../Controls/Controls";
 
 let selectedItemIndex: number;
+
 const initialCameraPos: [number, number, number] = [18, 18, 18];
 const initialControlsTarget: [number, number, number] = [0, 0, 0];
+extend({ OrbitControls })
 
 function App() {
   const [markers] = useState<
@@ -41,12 +45,9 @@ function App() {
       name: "The Food",
     },
   ]);
-  
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const AnimatedNavigation = animated(Navigation);
-  const AnimatedOrbitControls = animated(OrbitControls);
-
+  const [isAnimating, setIsAnimating] = useState(false);
   const [cameraValues, setCameraValues] = useState({
     cachedPos: initialCameraPos,
     cachedTarget: initialControlsTarget,
@@ -69,7 +70,7 @@ function App() {
     }
   }
 
-  const spring = useSpring({
+  const cameraSpring = useSpring({
     pos: cameraValues.pos,
     target: cameraValues.target,
     from: {
@@ -77,26 +78,8 @@ function App() {
       target: cameraValues.cachedTarget
     },
     config: config.slow,
-    onRest: () => setIsAnimating(false),
+    onRest: () => setIsAnimating(false)
   })
-
-  // const spring = useSpring({
-  //   to: async (next, cancel) => {
-  //     if (!isAnimating) {
-  //       cancel()
-  //     }
-  //     await next({
-  //       pos: cameraValues.pos,
-  //       target: cameraValues.target,
-  //     })
-  //   },
-  //   from: {
-  //     pos: cameraValues.cachedPos,
-  //     target: cameraValues.cachedTarget
-  //   },
-  //   config: config.slow,
-  //   onRest: () => setIsAnimating(false),
-  // })
 
   return (
     <div className="content">
@@ -120,13 +103,19 @@ function App() {
           </Nav.Link>
         </Nav>
       </div>
-      <Canvas
-        camera={{ position: cameraValues.pos, rotation: [0, 0, 0] }}>
+      <Canvas>
         <ambientLight />
-        <pointLight position={[0, 5, 0]} intensity={1} />
-        <AnimatedNavigation cameraPosition={spring.pos} />
-        <Suspense fallback={<Fallback />}>
-          <Room position={[0, 0, 0]} />
+        <pointLight
+          position={[0, 5, 0]}
+          intensity={1} />
+        <AnimatedNavigation
+          cameraPosition={cameraSpring.pos}
+          cameraTarget={cameraSpring.target} />
+        <Suspense
+          fallback={<Fallback />}>
+          <Room
+            position={[0, 0, 0]} />
+
           {isAnimating ? null : <group>
             <Marker
               position={markers[1].position}
@@ -144,15 +133,9 @@ function App() {
               id={3}
               onMarkerClicked={onNavigationItemClicked} />
           </group>}
+
         </Suspense>
-        <AnimatedOrbitControls
-          autoRotate={cameraValues.autoRotate}
-          autoRotateSpeed={0.2}
-          maxPolarAngle={Math.PI / 2.5}
-          minPolarAngle={Math.PI / 3}
-          target={spring.target}
-          enableKeys={false}
-          enablePan={false}/>
+        <Controls enabled={!isAnimating} autoRotate={cameraValues.autoRotate} target={cameraValues.target} />
         <Stars
           radius={100}
           depth={100}
