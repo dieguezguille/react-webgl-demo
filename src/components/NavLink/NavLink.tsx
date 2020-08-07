@@ -8,20 +8,16 @@ function NavLink(props) {
   const [hovered, setHovered] = useState(false);
   const AnimatedNavLink = animated(Nav.Link);
 
-  function onEnter() {
-    setHovered(true);
-  }
-
-  function onLeave() {
-    setHovered(false);
-  }
-
   const linkSpring = useSpring({
-    transform: hovered ? 'scale(1.1)' : 'scale(1)'
+    transform: hovered ? 'scale(1.1)' : 'scale(1)',
+    padding: 10,
+    margin: '0.5rem 1rem',
+    borderRadius: '5px',
+    backgroundColor: hovered ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0)'
   })
 
   return (
-    <AnimatedNavLink onPointerEnter={onEnter} onPointerLeave={onLeave} style={linkSpring} onClick={props.onClickEventHandler(props.id)}>
+    <AnimatedNavLink onPointerOver={e => setHovered(true)} onPointerOut={e => setHovered(false)} style={{...linkSpring}} onClick={() => props.onNavLinkClicked(props.id)}>
       {props.name}
     </AnimatedNavLink>
   );

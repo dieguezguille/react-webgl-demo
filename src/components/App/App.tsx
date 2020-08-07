@@ -11,7 +11,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Controls from "../Controls/Controls";
 import NavLink from "../NavLink/NavLink";
 
-let selectedItemIndex: number;
+let selectedItemIndex: number = 0;
 
 const initialCameraPos: [number, number, number] = [18, 18, 18];
 const initialControlsTarget: [number, number, number] = [0, 0, 0];
@@ -96,17 +96,17 @@ function App() {
           <NavLink
             id={1}
             name={markers[1].name}
-            onClickEventHandler={onNavigationItemClicked}>
+            onNavLinkClicked={onNavigationItemClicked}>
           </NavLink>
           <NavLink
             id={2}
             name={markers[2].name}
-            onClickEventHandler={onNavigationItemClicked}>
+            onNavLinkClicked={onNavigationItemClicked}>
           </NavLink>
           <NavLink
             id={3}
             name={markers[3].name}
-            onClickEventHandler={onNavigationItemClicked}>
+            onNavLinkClicked={onNavigationItemClicked}>
           </NavLink>
         </Nav>
       </div>
