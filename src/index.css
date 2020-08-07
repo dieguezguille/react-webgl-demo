@@ -73,6 +73,7 @@ body {
   justify-content: flex-start;
   align-items: center;
   min-width: 7em;
+  margin-bottom: 2px;
 }
 
 .circle {
@@ -108,6 +109,7 @@ body {
   color: white;
   margin: 0;
   word-wrap: break-word;
+  border-radius: 5px;
 }
 
 .info > p{
