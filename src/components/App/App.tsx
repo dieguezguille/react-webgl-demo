@@ -14,6 +14,7 @@ let selectedItemIndex: number;
 
 const initialCameraPos: [number, number, number] = [18, 18, 18];
 const initialControlsTarget: [number, number, number] = [0, 0, 0];
+
 extend({ OrbitControls })
 
 function App() {
