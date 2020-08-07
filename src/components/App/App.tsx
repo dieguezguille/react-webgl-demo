@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useRef, useEffect } from "react";
 import { Canvas, extend } from "react-three-fiber";
 import { Stars } from "drei";
 import Marker from "../Marker/Marker";
@@ -17,6 +17,7 @@ const initialCameraPos: [number, number, number] = [18, 18, 18];
 const initialControlsTarget: [number, number, number] = [0, 0, 0];
 
 extend({ OrbitControls })
+
 
 function App() {
   const [markers] = useState<
@@ -156,6 +157,9 @@ function App() {
           saturation={0}
           fade={true} />
       </Canvas>
+      <audio autoPlay loop>
+        <source src="music.mp3" type="audio/mpeg"></source>
+      </audio>
     </div>
   );
 }
