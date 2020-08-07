@@ -100,3 +100,18 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
+
+.info{
+  background-color: #00000056;
+  height: auto;
+  font-size: 4px;
+  color: white;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.info > p{
+  margin: 0 !important;
+  margin-top: 2em;
+  padding: 4px;
+}

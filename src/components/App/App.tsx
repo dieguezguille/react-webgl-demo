@@ -128,16 +128,19 @@ function App() {
                 position={markers[1].position}
                 name={markers[1].name}
                 id={1}
+                selected={selectedItemIndex}
                 onMarkerClicked={onNavigationItemClicked} />
               <Marker
                 position={markers[2].position}
                 name={markers[2].name}
                 id={2}
+                selected={selectedItemIndex}
                 onMarkerClicked={onNavigationItemClicked} />
               <Marker
                 position={markers[3].position}
                 name={markers[3].name}
                 id={3}
+                selected={selectedItemIndex}
                 onMarkerClicked={onNavigationItemClicked} />
             </group>}
         </Suspense>
