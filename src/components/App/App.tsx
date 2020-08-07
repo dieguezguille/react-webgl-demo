@@ -9,6 +9,7 @@ import { useSpring, animated, config } from "react-spring";
 import Nav from "react-bootstrap/esm/Nav";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Controls from "../Controls/Controls";
+import NavLink from "../NavLink/NavLink";
 
 let selectedItemIndex: number;
 
@@ -48,7 +49,9 @@ function App() {
   ]);
 
   const AnimatedNavigation = animated(Navigation);
+
   const [isAnimating, setIsAnimating] = useState(false);
+
   const [cameraValues, setCameraValues] = useState({
     cachedPos: initialCameraPos,
     cachedTarget: initialControlsTarget,
@@ -56,6 +59,17 @@ function App() {
     target: initialControlsTarget,
     autoRotate: true,
   });
+
+  const cameraSpring = useSpring({
+    pos: cameraValues.pos,
+    target: cameraValues.target,
+    from: {
+      pos: cameraValues.cachedPos,
+      target: cameraValues.cachedTarget
+    },
+    config: config.slow,
+    onRest: () => setIsAnimating(false)
+  })
 
   function onNavigationItemClicked(id: number) {
     if (selectedItemIndex !== id && !isAnimating) {
@@ -71,37 +85,29 @@ function App() {
     }
   }
 
-  const cameraSpring = useSpring({
-    pos: cameraValues.pos,
-    target: cameraValues.target,
-    from: {
-      pos: cameraValues.cachedPos,
-      target: cameraValues.cachedTarget
-    },
-    config: config.slow,
-    onRest: () => setIsAnimating(false)
-  })
-
   return (
     <div className="content">
       <div className="ui">
         <h2 className="title"
           onClick={() => onNavigationItemClicked(0)}>
           The Viking Room
-      </h2>
+        </h2>
         <Nav defaultActiveKey="/home" className="flex-column">
-          <Nav.Link
-            onClick={() => onNavigationItemClicked(1)}>
-            {markers[1].name}
-          </Nav.Link>
-          <Nav.Link
-            onClick={() => onNavigationItemClicked(2)}>
-            {markers[2].name}
-          </Nav.Link>
-          <Nav.Link
-            onClick={() => onNavigationItemClicked(3)}>
-            {markers[3].name}
-          </Nav.Link>
+          <NavLink
+            id={1}
+            name={markers[1].name}
+            onClickEventHandler={onNavigationItemClicked}>
+          </NavLink>
+          <NavLink
+            id={2}
+            name={markers[2].name}
+            onClickEventHandler={onNavigationItemClicked}>
+          </NavLink>
+          <NavLink
+            id={3}
+            name={markers[3].name}
+            onClickEventHandler={onNavigationItemClicked}>
+          </NavLink>
         </Nav>
       </div>
       <Canvas>
@@ -116,27 +122,29 @@ function App() {
           fallback={<Fallback />}>
           <Room
             position={[0, 0, 0]} />
-
-          {isAnimating ? null : <group>
-            <Marker
-              position={markers[1].position}
-              name={markers[1].name}
-              id={1}
-              onMarkerClicked={onNavigationItemClicked} />
-            <Marker
-              position={markers[2].position}
-              name={markers[2].name}
-              id={2}
-              onMarkerClicked={onNavigationItemClicked} />
-            <Marker
-              position={markers[3].position}
-              name={markers[3].name}
-              id={3}
-              onMarkerClicked={onNavigationItemClicked} />
-          </group>}
-
+          {isAnimating ? null :
+            <group>
+              <Marker
+                position={markers[1].position}
+                name={markers[1].name}
+                id={1}
+                onMarkerClicked={onNavigationItemClicked} />
+              <Marker
+                position={markers[2].position}
+                name={markers[2].name}
+                id={2}
+                onMarkerClicked={onNavigationItemClicked} />
+              <Marker
+                position={markers[3].position}
+                name={markers[3].name}
+                id={3}
+                onMarkerClicked={onNavigationItemClicked} />
+            </group>}
         </Suspense>
-        <Controls enabled={!isAnimating} autoRotate={cameraValues.autoRotate} target={cameraValues.target} />
+        <Controls
+          enabled={!isAnimating}
+          autoRotate={cameraValues.autoRotate}
+          target={cameraValues.target} />
         <Stars
           radius={100}
           depth={100}

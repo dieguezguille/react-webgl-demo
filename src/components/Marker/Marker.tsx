@@ -3,17 +3,7 @@ import { Html } from "drei";
 import Nav from "react-bootstrap/esm/Nav";
 import { useSpring, animated, config } from "react-spring";
 
-function Marker({
-  position,
-  name,
-  id,
-  onMarkerClicked,
-}: {
-  position: [number, number, number];
-  name: string;
-  id: number;
-  onMarkerClicked: (id: number) => void 
-}) {
+function Marker(props) {
 
   const markerSpring = useSpring({
     opacity: 1,
@@ -24,12 +14,12 @@ function Marker({
   })
 
   return (
-    <mesh position={position}>
+    <mesh position={props.position}>
       <Html scaleFactor={100}>
-        <animated.div className="overlay" style={markerSpring} onClick={() => onMarkerClicked(id)}>
-          <div className="circle box">{id}</div>
+        <animated.div className="overlay" style={markerSpring} onClick={() => props.onMarkerClicked(props.id)}>
+          <div className="circle box">{props.id}</div>
           <div className="box">
-            <Nav.Link className="text-overlay">{name}</Nav.Link>
+            <Nav.Link className="text-overlay">{props.name}</Nav.Link>
           </div>
         </animated.div>
       </Html>
