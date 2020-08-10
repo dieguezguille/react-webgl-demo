@@ -34,17 +34,17 @@ function App() {
     },
     {
       position: [-12, 10, 2],
-      cameraPos: [0, 10, 2],
+      cameraPos: [3, 9, 2],
       name: "The Tales",
     },
     {
       position: [0, 10, -7],
-      cameraPos: [0, 10, 5.7],
+      cameraPos: [0, 10, 9],
       name: "The Weapons",
     },
     {
       position: [0, 6, 2],
-      cameraPos: [7, 8, 10],
+      cameraPos: [9, 8, 14],
       name: "The Food",
     },
   ]);
