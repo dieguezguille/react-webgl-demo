@@ -1,6 +1,6 @@
 # Introduction
 
-This project was made just for demo/learning purposes. You can fork it, edit the code, I'm even open to suggestions and PR's! Hope it turns useful for beginners like me.
+This project was made just for demo/learning purposes. You can fork it, edit, share it! Hope it turns useful for beginners like me.
 
 ## How to run
 
